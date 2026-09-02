@@ -8,8 +8,8 @@ Här nedan presenteras en översikt över statusen på lösande av uppgfterna.
 |:---------------------------------|:------:|
 | 0. Projektstruktur               |   🟢   |
 | 1. Diskussionsfrågor             |   🟢   |
-| 2. Prestandatest: Insertion sort |   🟡   |
-| 3. Prestandatest: merge sort     |   🔴   |
+| 2. Prestandatest: Insertion sort |   🟢   |
+| 3. Prestandatest: merge sort     |   🟡   |
 
 
 ## 0️⃣Projektstruktur
@@ -21,7 +21,7 @@ Skapa ett projekt enligt alla konstens regler, på det sätt vi gått igenom på
 
 ### Uppgift: 
 Svara på frågorna:
-1. Vad är en regression? När inträffar de oftast under ett projekts livstid?
+1. Vad är en regression? När inträffar de oftast under ett projekts livstid?  
 En regression är när något som tidigare fungerat slutat fungera efter en ändring. 
 De inträffar oftast då någon förändring av koden sker. Det kan vara vid:
 - Implementering av ny kod
@@ -30,21 +30,21 @@ De inträffar oftast då någon förändring av koden sker. Det kan vara vid:
 - Ändringar av kodens beroenden
 - Förändring av gränssnitt mor databeser och api'er
 
-2. Vad är skillnaden mellan enhetstest och regressionstest?
+2. Vad är skillnaden mellan enhetstest och regressionstest?  
 Enhetstest är det initiala testet av delsystem, t.ex. en funktion. Syftet är att kontrollera  
 att en specifik del fungerar korrekt. Regressionstest syftar till att verifiera att tidgiare
 implementerad kod fungerar efter ändringar. Det innebär att ett test som från början var ett
 enhetstest kan bli ett regressionstest senare i projektet.   
 
 
-3. Vilka krav på git-kunskap kräver det av utvecklare att jobba med CI? 
+3. Vilka krav på git-kunskap kräver det av utvecklare att jobba med CI?  
 GIT är en central del i CI konceptet. Då en ändring gjorts i ett repository startar ofta
 en pipeline automatiskt. Den kan då t.ex. köra tester och bygga kod. Den som arbetar med 
 CI bör minst vara bekant med kommandona Clone, Pull, Add, Commit, Push. Det är också viktigt
 att förstå begreppen branch och merge samt kunna hantera pull och merge requests.
 
 
-4. Vad är en feature? Hur förhåller det sig till kraven? 
+4. Vad är en feature? Hur förhåller det sig till kraven?   
 En feature är oftast en funktion eller funktionalitet i ett system. Det är en del av 
 systemet som kan göra något för användaren av detsamma. Det kan t.ex. vara en inloggnings-
 funktion, gör en betalning eller lägga till en vara i en kundkorg.  
@@ -84,6 +84,66 @@ från konstanten då tillväxttakten är densamma.
 
 
 ## 2️⃣ Prestandatest: Insertion sort
+
+````python
+def insertion_sort(lst):
+    result = []
+    for item in lst:
+        inserted = False
+        index = 0
+        while not inserted and index < len(result):
+            if item < result[index]:
+                result.insert(index, item)
+                inserted = True
+            index += 1
+        if not inserted:
+            result.append(item)
+    return result
+````  
+  
+1. Vad har funktionen för tidskomplexitet?  
+Yttre loop:  
+0+1+2+⋯+(n−1) = n(n - 1) / 2  
+n(n − 1) / 2 - n2 − n / 2  
+n² är den dominerande termen då den växer snabbare än n  
+
+Om listan är sorterad blir best case = O(n2)
+Om listan är osorterad blir worst case = O(n2)  
+
+2. Skriv enhetstest som kontrollerar att funktionen kan sortera en lista med tal korrekt.  
+````python
+pytest -v m unit
+````
+### Tester:  
+test_insertion_sort_unsorted_list()  
+test_insertion_sort_sorted_list()  
+test_insertion_sort_single_element_list()  
+test_insertion_sort_empty_element_list()
+
+3. Skriv prestandatest som testar att sortera en riktigt lång, slumpad lista.
+````python
+pytest --benchmark-columns="min,max,mean" -m performance
+````
+### Tester:  
+- test_insertion_sort_unsorted_random_list_3000_items  
+- test_insertion_sort_unsorted_random_list_5000_items  
+- test_insertion_sort_unsorted_random_list_7000_items  
+- test_insertion_sort_unsorted_random_list_9000_items  
+- test_insertion_sort_unsorted_random_list_11000_items  
+- test_insertion_sort_unsorted_random_list_13000_items  
+- test_insertion_sort_unsorted_random_list_15000_items  
+
+### Resultat
+
+Körtiden ökar ungefär kvadratiskt med listans längd (ratio). Detta stämmer med insertion sorts 
+förväntade tidskomplexitet på O(n2). När listans längd ökar blir körtiden därför snabbt mycket längre.
+
+![insertion_sort_data.png](images/insertion_sort_data.png))
+
+![graph_insertion_sort.png](images/graph_insertion_sort.png)
+
+
+
 
 ## 3️⃣  Prestandatest: merge sort
 
