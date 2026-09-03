@@ -1,9 +1,10 @@
 import pytest
 
 @pytest.mark.unit
+@pytest.mark.insertion_sort
 def test_insertion_sort_unsorted_list(insertion_sort):
     """
-    Tests insertion sort on unsorted list
+    Tests that the insertion_sort function correctly sorts an unsorted list
     """
     #Arrange
     lst =  [10, 8, 6, 4, 2, 0]
@@ -16,9 +17,10 @@ def test_insertion_sort_unsorted_list(insertion_sort):
 
 
 @pytest.mark.unit
+@pytest.mark.insertion_sort
 def test_insertion_sort_sorted_list(insertion_sort):
     """
-    Tests insertion sort on sorted list
+    Tests that the insertion_sort function correctly handles a sorted list
     """
     # Arrange
     lst = [0, 2, 4, 6, 8, 10]
@@ -31,9 +33,10 @@ def test_insertion_sort_sorted_list(insertion_sort):
 
 
 @pytest.mark.unit
+@pytest.mark.insertion_sort
 def test_insertion_sort_single_element_list(insertion_sort):
     """
-    Tests insertion sort on single element list
+    Tests that the insertion_sort function correctly handles a single element list
     """
     #Arrange
     lst =  [10]
@@ -46,9 +49,10 @@ def test_insertion_sort_single_element_list(insertion_sort):
 
 
 @pytest.mark.unit
+@pytest.mark.insertion_sort
 def test_insertion_sort_empty_element_list(insertion_sort):
     """
-    Tests insertion sort on empty list
+    Tests that the insertion_sort function correctly handles an empty list
     """
     #Arrange
     lst =  []

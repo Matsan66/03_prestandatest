@@ -9,7 +9,7 @@ Här nedan presenteras en översikt över statusen på lösande av uppgfterna.
 | 0. Projektstruktur               |   🟢   |
 | 1. Diskussionsfrågor             |   🟢   |
 | 2. Prestandatest: Insertion sort |   🟢   |
-| 3. Prestandatest: merge sort     |   🟡   |
+| 3. Prestandatest: merge sort     |   🟢   |
 
 
 ## 0️⃣Projektstruktur
@@ -112,7 +112,7 @@ Om listan är osorterad blir worst case = O(n2)
 
 2. Skriv enhetstest som kontrollerar att funktionen kan sortera en lista med tal korrekt.  
 ````python
-pytest -v m unit
+pytest -v -m "unit and insertion_sort"
 ````
 ### Tester:  
 test_insertion_sort_unsorted_list()  
@@ -122,7 +122,7 @@ test_insertion_sort_empty_element_list()
 
 3. Skriv prestandatest som testar att sortera en riktigt lång, slumpad lista.
 ````python
-pytest --benchmark-columns="min,max,mean" -m performance
+pytest --benchmark-columns="min,max,mean" -m "performance and insertion_sort"
 ````
 ### Tester:  
 - test_insertion_sort_unsorted_random_list_3000_items  
@@ -143,8 +143,76 @@ förväntade tidskomplexitet på O(n2). När listans längd ökar blir körtiden
 ![graph_insertion_sort.png](images/graph_insertion_sort.png)
 
 
-
-
 ## 3️⃣  Prestandatest: merge sort
 
+````python
+def merge_sort(lst):
+    if len(lst) <= 1:
+        return lst
 
+    mid = len(lst) // 2
+    left = merge_sort(lst[:mid])
+    right = merge_sort(lst[mid:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+````  
+1. Vad har funktionerna för tidskomplexitet?  
+
+merge_sort()  
+Beroende på antalet element måste originallistan delas med 2 ```log₂(n)``` gånger. Efter varje delning 
+måste n element behandlas till en tidskostnad på O(n). Det ger ```n × log₂(n)``` = ```O(n log n)```.
+
+merge()  
+Varje element i listorna left och right behandlas en gång. Tidskomplexitetet blir därför 
+linjär O(n). Även extend raderna som går igenom återstående element gör det linjärt, en 
+operation per element. Det förändrar därför inte tidskomplexiteten.  
+
+2. Skriv enhetstest som kontrollerar att funktionen kan sortera en lista med tal.
+````python
+pytest -v -m "unit and merge_sort"
+````
+### Tester:  
+test_merge_sort_unsorted_list()  
+test_merge_sort_sorted_list()  
+test_merge_sort_single_element_list()  
+test_merge_sort_empty_element_list()
+
+4. Skriv prestandatest på samma sätt som i föregående uppgift.
+````python
+pytest --benchmark-columns="min,max,mean" -m performance
+````
+### Tester:  
+- test_merge_sort_unsorted_random_list_3000_items  
+- test_merge_sort_unsorted_random_list_5000_items  
+- test_merge_sort_unsorted_random_list_7000_items  
+- test_merge_sort_unsorted_random_list_9000_items  
+- test_merge_sort_unsorted_random_list_11000_items  
+- test_merge_sort_unsorted_random_list_13000_items  
+- test_merge_sort_unsorted_random_list_15000_items  
+
+### Resultat
+
+Körtiden ökar ungefär enligt O(n log n) när listans längd ökar, vilket stämmer 
+med merge sorts förväntade tidskomplexitet. Ratio-värdena visar att körtiden ökar, 
+men betydligt långsammare än vid en kvadratisk tidskomplexitet (insertion).
+
+![merge_sort_data.png](images/merge_sort_data.png))
+
+![graph_merge_sort.png](images/graph_merge_sort.png)
